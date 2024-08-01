@@ -16,7 +16,10 @@ This repository contains a Bash script that installs a suite of tools required f
 
 - Ubuntu or any Debian-based distribution
 - `sudo` privileges
-
+- `git` installed
+```sh
+sudo apt install git
+```
 ## Installation
 
 1. **Clone the repository:**
