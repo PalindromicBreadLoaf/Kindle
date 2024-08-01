@@ -21,7 +21,7 @@ This repository contains a Bash script that installs a suite of tools required f
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/yourusername/CTF-tools-install-script.git
+    git clone https://github.com/BGCTF/Kindle.git
     cd Kindle
     ```
 
