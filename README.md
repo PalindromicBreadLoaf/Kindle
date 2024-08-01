@@ -70,7 +70,7 @@ It would be nice if you could add our @BGCTF repo in your private forks :)
 
 ## Contact
 
-For any questions or feedback, please open an issue on the repository or contact [BGCTF@gmail.com](mailto:BGCTF@gmail.com).
+For any questions or feedback, please open an issue on the repository or contact [BGSUCTF@gmail.com](mailto:BGSUCTF@gmail.com).
 
 ---
 
