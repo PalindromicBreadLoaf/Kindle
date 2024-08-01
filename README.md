@@ -22,7 +22,7 @@ This repository contains a Bash script that installs a suite of tools required f
 1. **Clone the repository:**
     ```sh
     git clone https://github.com/yourusername/CTF-tools-install-script.git
-    cd CTF-tools-install-script
+    cd Kindle
     ```
 
 2. **Make the script executable:**
