@@ -1,7 +1,6 @@
 # CTF Tools Installation Script
 
-![CTF Tools](https://via.placeholder.com/728x90.png)
-
+[INSERT THE .gif]
 ## Overview
 
 This repository contains a Bash script that installs a suite of tools required for participating in Capture The Flag (CTF) cybersecurity competitions. The script automates the installation of various essential tools and dependencies, saving time and effort for participants.
