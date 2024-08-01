@@ -27,12 +27,12 @@ This repository contains a Bash script that installs a suite of tools required f
 
 2. **Make the script executable:**
     ```sh
-    sudo chmod +x install.sh
+    sudo chmod +x kindling.sh
     ```
 
 3. **Run the script:**
     ```sh
-    sudo ./install.sh
+    sudo ./kindling.sh
     ```
 
 ## Tools Installed
