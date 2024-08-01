@@ -62,16 +62,15 @@ Contributions are welcome! If you have suggestions for additional tools or impro
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+It would be nice if you could add our @BGCTF repo in your private forks :)
 
 ## Acknowledgements
 
 - ASCII art generated using [ASCII Art Generator](https://www.ascii-art.de/)
-- Inspired by various CTF toolkits and installations scripts found online
 
 ## Contact
 
-For any questions or feedback, please open an issue on the repository or contact [your_email@example.com](mailto:your_email@example.com).
+For any questions or feedback, please open an issue on the repository or contact [BGCTF@gmail.com](mailto:BGCTF@gmail.com).
 
 ---
 
