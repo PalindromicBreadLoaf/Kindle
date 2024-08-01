@@ -27,7 +27,7 @@ This repository contains a Bash script that installs a suite of tools required f
 
 2. **Make the script executable:**
     ```sh
-    chmod +x install.sh
+    sudo chmod +x install.sh
     ```
 
 3. **Run the script:**
