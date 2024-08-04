@@ -41,12 +41,64 @@ sudo apt install git
 ## Tools Installed
 
 The script installs the following tools:
+### Web Application Security
+- Burp Suite
 
-- General packages: `gdb`, `python3`, `python3-pip`, `git`, `libssl-dev`, `curl`, etc.
-- Specialized tools: `Ghidra`, `Docker`, `VSCode`, `Metasploit`, `Autopsy`, `CyberChef`, `GEF`, etc.
-- Network tools: `nmap`, `wireshark`, `hydra`, `sqlmap`, etc.
-- Forensic tools: `autopsy`, `exiftool`, etc.
-- Miscellaneous: `hashcat`, `john`, `gobuster`, `ffuf`, etc.
+### Reverse Engineering
+- Ghidra
+- IDA
+- GDB
+- pwntools
+
+### Containerization and Virtualization
+- Docker
+
+### Integrated Development Environments (IDEs) and Text Editors
+- VSCode
+- Emacs
+- Vim
+
+### Digital Forensics and Incident Response (DFIR)
+- Autopsy
+- ExifTool
+- Exif
+- Volatility
+
+### General Cybersecurity Tools
+- CyberChef
+- Metasploit
+- SecLists
+- gobuster
+- mimikatz
+- exploitdb
+- PEASS
+
+### Password Cracking
+- John the Ripper
+- Hashcat
+- Hydra
+
+### Audio Editing
+- Audacity
+
+### Network Analysis
+- Nmap
+- Wireshark
+
+### Version Control
+- Git
+
+### Command-Line Utilities
+- curl
+- Checksec
+- ffuf
+
+### Database Security
+- sqlmap
+
+### Scripting and Programming
+- Python
+
 
 ## Usage
 
