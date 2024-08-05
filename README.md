@@ -38,7 +38,7 @@ sudo apt install git
     sudo ./kindling.sh
     ```
 
-## Tools Installed
+## Tools List
 
 The script installs the following tools:
 ### Web Application Security
