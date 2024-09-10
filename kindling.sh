@@ -90,11 +90,11 @@ Welcome(){
 
 install_packages() {
     # List of packages to install (space-separated)
-    local packages=("gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
+    local packages=("snapd" "gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
     "libffi-dev" "build-essential" "python3-pwntools" "gobuster" "emacs" "vim" "john" 
     "hashcat" "audacity" "exiftool" "nmap" "wireshark" "gcc-multilib" "g++-multilib"
     "curl" "sqlmap" "checksec" "exif" "ipython3" "ffuf" "hydra" "openjdk-17-jdk" 
-    "autopsy" "snapd")
+    "autopsy")
 
     # Update package lists
     echo "Updating package lists..."
