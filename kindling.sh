@@ -90,8 +90,7 @@ Welcome(){
 
 install_packages() {
     # snapd install
-    sudo apt install snapd
-    sudo apt update
+    sudo apt install snapd -y
     
     # List of packages to install (space-separated)
     local packages=("gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
