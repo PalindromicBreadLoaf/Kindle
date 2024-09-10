@@ -196,7 +196,7 @@ fi
 sudo snap install code --classic
 
 #fuff 
-sudo snap install fuff
+sudo snap install ffuf
 
 # Autopsy stuff
 sudo snap install autopsy
