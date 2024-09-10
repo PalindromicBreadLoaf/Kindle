@@ -144,27 +144,28 @@ wait
 echo "[+] All downloads are completed."
 
 # Ghidra stuff
-if [ -d /opt/ghidra ]; then
-    echo "[!] Found a ghidra folder already in /opt."
-    echo "[!] Ghidra is already installed."
-else
-    echo "[+] Ghidra is not installed. Installing..."
-    sudo mv ./ghidra_11.1.2.zip /opt/
-    sudo unzip /opt/ghidra_11.1.2.zip -d /opt/
-    sudo rm /opt/ghidra_11.1.2.zip
-    DESKTOP_ENTRY="[Desktop Entry]
-    Name=Ghidra Run
-    Comment=Run Ghidra
-    Exec=/opt/ghidra_11.1.2_PUBLIC/ghidraRun
-    Icon=/opt/ghidra_11.1.2_PUBLIC/docs/images/GHIDRA_1.png
-    Terminal=false
-    Type=Application
-    "
-    USER_HOME=$(eval echo ~"$SUDO_USER")
-    sudo echo "$DESKTOP_ENTRY" > "$USER_HOME/Desktop/ghidraRun.desktop"
-    sudo chmod +x "$USER_HOME/Desktop/ghidraRun.desktop"
-    echo "[+] Shortcut created on Desktop"
-fi
+#if [ -d /opt/ghidra ]; then
+#    echo "[!] Found a ghidra folder already in /opt."
+#    echo "[!] Ghidra is already installed."
+#else
+#    echo "[+] Ghidra is not installed. Installing..."
+#    sudo mv ./ghidra_11.1.2.zip /opt/
+#    sudo unzip /opt/ghidra_11.1.2.zip -d /opt/
+#    sudo rm /opt/ghidra_11.1.2.zip
+#    DESKTOP_ENTRY="[Desktop Entry]
+#    Name=Ghidra Run
+#    Comment=Run Ghidra
+#    Exec=/opt/ghidra_11.1.2_PUBLIC/ghidraRun
+#    Icon=/opt/ghidra_11.1.2_PUBLIC/docs/images/GHIDRA_1.png
+#    Terminal=false
+#    Type=Application
+#    "
+#    USER_HOME=$(eval echo ~"$SUDO_USER")
+#    sudo echo "$DESKTOP_ENTRY" > "$USER_HOME/Desktop/ghidraRun.desktop"
+#    sudo chmod +x "$USER_HOME/Desktop/ghidraRun.desktop"
+#    echo "[+] Shortcut created on Desktop"
+#fi
+sudo snap install ghidra
 
 # Docker stuff
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
