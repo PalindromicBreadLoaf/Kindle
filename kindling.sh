@@ -89,9 +89,13 @@ Welcome(){
 }
 
 install_packages() {
+    # snapd install
+    sudo apt install snapd
+    sudo apt update
+    
     # List of packages to install (space-separated)
-    local packages=("snapd" "gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
-    "libffi-dev" "build-essential" "python3-pwntools" "gobuster" "emacs" "vim" "john" 
+    local packages=("gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
+    "libffi-dev" "build-essential" "gobuster" "emacs" "vim" "john" 
     "hashcat" "audacity" "exiftool" "nmap" "wireshark" "gcc-multilib" "g++-multilib"
     "curl" "sqlmap" "checksec" "exif" "ipython3" "ffuf" "hydra" "openjdk-17-jdk" 
     "autopsy")
@@ -166,6 +170,9 @@ echo "[+] All downloads are completed."
 #    echo "[+] Shortcut created on Desktop"
 #fi
 sudo snap install ghidra
+
+# Pwn Tools
+python3 -m pip install pwntools
 
 # Docker stuff
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
