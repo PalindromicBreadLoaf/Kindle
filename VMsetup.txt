@@ -1,0 +1,3 @@
+1. Head to https://www.virtualbox.org/wiki/Downloads 
+2. Choose the correct download for your environemnt. 
+3. 
