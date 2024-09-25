@@ -51,7 +51,7 @@ ASCII=$(cat << 'EOF'
 EOF
 )
 
-ASCI_TEXT=$(cat << 'EOF'                                
+ASCII_TEXT=$(cat << 'EOF'
      )                       
     ( /(           (   (       
     )\())(         )\ ))\  (   
@@ -77,7 +77,7 @@ Welcome(){
     #echo "$ASCII"
     echo "         Welcome to"
     echo "        ============"
-    echo "$ASCI_TEXT"
+    echo "$ASCII_TEXT"
     echo ""
     echo "A script kiddies dream come true!"
     echo "This script will install all"
@@ -88,27 +88,74 @@ Welcome(){
     echo "[+] Started Kindling the fire"
 }
 
+detect_package_manager() {
+    if command -v apt &> /dev/null; then
+        PACKAGE_MANAGER="apt"
+    elif command -v pacman &> /dev/null; then
+        PACKAGE_MANAGER="pacman"
+
+        if command -v paru &> /dev/null; then
+            AUR_HELPER="paru"
+        elif command -v yay &> /dev/null; then
+            AUR_HELPER="yay"
+        else
+            sudo pacman -S --noconfirm git base-devel
+            git clone https://aur.archlinux.org/paru.git
+            cd paru || exit
+            makepkg -si --noconfirm
+            cd ..
+            rm -r paru
+        fi
+    else
+        echo "Neither apt nor pacman is available. Exiting."
+        exit 1
+    fi
+}
+
 install_packages() {
-    # snapd install
-    sudo apt install snapd -y
+    # snapd install (apt only)
+    if [ "$PACKAGE_MANAGER" == "apt" ]; then
+      sudo apt install snapd -y
+    fi
     
     # List of packages to install (space-separated)
-    local packages=("gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
+    # apt packages
+    local packages_apt=("gdb" "python3" "python3-pip" "python3-dev" "git" "libssl-dev"
     "libffi-dev" "build-essential" "gobuster" "emacs" "vim" "john" 
     "hashcat" "audacity" "exiftool" "nmap" "wireshark" "gcc-multilib" "g++-multilib"
     "curl" "sqlmap" "checksec" "exif" "ipython3" "hydra" "openjdk-17-jdk" 
     "autopsy")
 
+    # pacman (and AUR) packages
+    local packages_pacman=("gdb" "python" "python-pip" "python-devtools" "openssl"
+    "libffi" "base-devel" "emacs" "vim" "john"
+    "hashcat" "audacity" "perl-image-exiftool" "nmap" "wireshark-qt" "wireshark-cli" "gcc" "g++"
+    "curl" "sqlmap" "checksec" "ipython" "hydra")
+
+    local packages_AUR=("gobuster-bin" "exif" "jdk17-graalvm-ee-bin" "autopsy")
+
     # Update package lists
     echo "Updating package lists..."
-    sudo apt update
+    if [ "$PACKAGE_MANAGER" == "apt" ]; then
+      sudo apt update
+    else
+      sudo pacman -Syu
+    fi
 
     # Install packages
     echo "Installing packages..."
-    if sudo apt install -y "${packages[@]}"; then
-        echo "Package installation complete."
+    if [ "$PACKAGE_MANAGER" == "apt" ]; then
+        if sudo apt install -y "${packages_apt[@]}"; then
+            echo "Package installation complete."
+        else
+            echo "Package installation failed. Please check the error messages above."
+        fi
     else
-        echo "Package installation failed. Please check the error messages above."
+        if sudo pacman -S --noconfirm "${packages_pacman[@]}"; then
+            echo "Package installation complete."
+        else
+            echo "Package installation failed. Please check the error messages above."
+        fi
     fi
 }
 
@@ -133,7 +180,8 @@ fetch() {
 Welcome
 sleep 3
 
-# apt install function call
+# install function call
+detect_package_manager
 install_packages
 
 #=====================
@@ -168,7 +216,11 @@ echo "[+] All downloads are completed."
 #    sudo chmod +x "$USER_HOME/Desktop/ghidraRun.desktop"
 #    echo "[+] Shortcut created on Desktop"
 #fi
-sudo snap install ghidra
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo snap install ghidra
+else
+    sudo pacman -S --noconfirm ghidra
+fi
 
 # Pwn Tools
 python3 -m pip install pwntools
@@ -177,31 +229,57 @@ python3 -m pip install pwntools
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 if ! command -v docker &> /dev/null; then
     echo "[+] Docker is not installed. Installing..."
-    sudo apt-get install -y ca-certificates curl
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo mv docker.asc /etc/apt/keyrings/
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    if [ "$PACKAGE_MANAGER" == "apt" ]; then
+      sudo apt-get install -y ca-certificates curl
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo mv docker.asc /etc/apt/keyrings/
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      sudo apt-get update
+      sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    else
+      sudo pacman -S --noconfirm docker docker-compose
+
+      if [ "$AUR_HELPER" == "paru" ]; then
+          paru -S --noconfirm docker-ce docker-ce-cli containerd docker-buildx docker-compose-plugin
+      elif [ "$AUR_HELPER" == "yay" ]; then
+          yay -S --noconfirm docker-ce docker-ce-cli containerd docker-buildx docker-compose-plugin
+      fi
+    fi
 else
     echo "[!] Docker is already installed."
 fi
 
 # Vscode stuff
-sudo snap install code --classic
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo snap install code --classic
+else
+    sudo pacman -S --noconfirm code
+fi
 
-#fuff 
-sudo snap install ffuf
+#fuff
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo snap install ffuf
+else
+    sudo pacman -S --noconfirm ffuf
+fi
 
 # Autopsy stuff
-sudo snap install autopsy
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo snap install autopsy
+else
+    sudo pacman -S --noconfirm autopsy
+fi
 
 # CyberChef
-sudo snap install cyberchef
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo snap install cyberchef
+else
+    sudo pacman -S --noconfirm cyberchef
+fi
 
 # Gef install
 sudo chmod +x ./gef_install.sh
@@ -211,7 +289,11 @@ sudo ./gef_install.sh
 sudo chmod 755 ./msfinstall
 sudo ./msfinstall
 
-sudo apt upgrade -y
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo apt upgrade -y
+else
+    sudo pacman -Syyu
+fi
 
 echo ""
 echo "$ASCII_DONE"
