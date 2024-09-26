@@ -104,7 +104,8 @@ detect_package_manager() {
             cd paru || exit
             makepkg -si --noconfirm
             cd ..
-            rm -r paru
+            rm -rf paru
+            AUR_HELPER="paru"
         fi
     else
         echo "Neither apt nor pacman is available. Exiting."
@@ -139,7 +140,7 @@ install_packages() {
     if [ "$PACKAGE_MANAGER" == "apt" ]; then
       sudo apt update
     else
-      sudo pacman -Syu
+      sudo pacman -Syyu --noconfirm
     fi
 
     # Install packages
@@ -153,6 +154,11 @@ install_packages() {
     else
         if sudo pacman -S --noconfirm "${packages_pacman[@]}"; then
             echo "Package installation complete."
+                if [ "$AUR_HELPER" == "paru" ]; then
+                    paru -S --noconfirm "${packages_AUR[@]}"
+                elif [ "$AUR_HELPER" == "yay" ]; then
+                    yay -S --noconfirm "${packages_AUR[@]}"
+                fi
         else
             echo "Package installation failed. Please check the error messages above."
         fi
