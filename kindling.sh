@@ -223,10 +223,20 @@ else
 fi
 
 # Pwn Tools
-python3 -m pip install pwntools
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    python3 -m pip install pwntools
+else
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm python-pwntools-git
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm python-pwntools-git
+    fi
+fi
 
 # Docker stuff
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+fi
 if ! command -v docker &> /dev/null; then
     echo "[+] Docker is not installed. Installing..."
     if [ "$PACKAGE_MANAGER" == "apt" ]; then
@@ -241,13 +251,15 @@ if ! command -v docker &> /dev/null; then
       sudo apt-get update
       sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     else
-      sudo pacman -S --noconfirm docker docker-compose
+      sudo pacman -S --noconfirm docker docker-compose ca-certificates curl docker-buildx containerd
 
       if [ "$AUR_HELPER" == "paru" ]; then
-          paru -S --noconfirm docker-ce docker-ce-cli containerd docker-buildx docker-compose-plugin
+          paru -S --noconfirm lazydocker
       elif [ "$AUR_HELPER" == "yay" ]; then
-          yay -S --noconfirm docker-ce docker-ce-cli containerd docker-buildx docker-compose-plugin
+          yay -S --noconfirm lazydocker
       fi
+
+      sudo systemctl enable --now docker.service
     fi
 else
     echo "[!] Docker is already installed."
@@ -264,35 +276,63 @@ fi
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
     sudo snap install ffuf
 else
-    sudo pacman -S --noconfirm ffuf
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm ffuf
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm ffuf
+    fi
 fi
 
 # Autopsy stuff
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
     sudo snap install autopsy
 else
-    sudo pacman -S --noconfirm autopsy
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm autopsy
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm autopsy
+    fi
 fi
 
 # CyberChef
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
     sudo snap install cyberchef
 else
-    sudo pacman -S --noconfirm cyberchef
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm cyberchef-electron
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm cyberchef-electron
+    fi
 fi
 
 # Gef install
-sudo chmod +x ./gef_install.sh
-sudo ./gef_install.sh
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo chmod +x ./gef_install.sh
+    sudo ./gef_install.sh
+else
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm gef-git
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm gef-git
+    fi
+fi
 
 # Metasploit
-sudo chmod 755 ./msfinstall
-sudo ./msfinstall
+if [ "$PACKAGE_MANAGER" == "apt" ]; then
+    sudo chmod 755 ./msfinstall
+    sudo ./msfinstall
+else
+    if [ "$AUR_HELPER" == "paru" ]; then
+        paru -S --noconfirm metasploit-git
+    elif [ "$AUR_HELPER" == "yay" ]; then
+        yay -S --noconfirm metasploit-git
+    fi
+fi
 
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
     sudo apt upgrade -y
 else
-    sudo pacman -Syyu
+    sudo pacman -Syu
 fi
 
 echo ""
