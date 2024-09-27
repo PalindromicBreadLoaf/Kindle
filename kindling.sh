@@ -120,7 +120,9 @@ install_packages() {
     else
         git clone https://aur.archlinux.org/snapd.git
         cd snapd
-        makepkg -si
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf snapd
         sudo systemctl enable --now snapd.socket
     fi
     
@@ -138,7 +140,7 @@ install_packages() {
     "hashcat" "audacity" "perl-image-exiftool" "nmap" "wireshark-qt" "wireshark-cli" "gcc"
     "curl" "sqlmap" "checksec" "ipython" "hydra")
 
-    local packages_AUR=("gobuster-bin" "exif" "jdk17-graalvm-ee-bin" "autopsy")
+    local packages_AUR=("gobuster-bin" "exif" "jdk17-graalvm-ee-bin")
 
     # Update package lists
     echo "Updating package lists..."
