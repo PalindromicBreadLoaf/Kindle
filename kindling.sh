@@ -114,9 +114,14 @@ detect_package_manager() {
 }
 
 install_packages() {
-    # snapd install (apt only)
+    # snapd install
     if [ "$PACKAGE_MANAGER" == "apt" ]; then
-      sudo apt install snapd -y
+        sudo apt install snapd -y
+    else
+        git clone https://aur.archlinux.org/snapd.git
+        cd snapd
+        makepkg -si
+        sudo systemctl enable --now snapd.socket
     fi
     
     # List of packages to install (space-separated)
@@ -130,7 +135,7 @@ install_packages() {
     # pacman (and AUR) packages
     local packages_pacman=("gdb" "python" "python-pip" "python-devtools" "openssl"
     "libffi" "base-devel" "emacs" "vim" "john"
-    "hashcat" "audacity" "perl-image-exiftool" "nmap" "wireshark-qt" "wireshark-cli" "gcc" "g++"
+    "hashcat" "audacity" "perl-image-exiftool" "nmap" "wireshark-qt" "wireshark-cli" "gcc"
     "curl" "sqlmap" "checksec" "ipython" "hydra")
 
     local packages_AUR=("gobuster-bin" "exif" "jdk17-graalvm-ee-bin" "autopsy")
@@ -140,7 +145,7 @@ install_packages() {
     if [ "$PACKAGE_MANAGER" == "apt" ]; then
       sudo apt update
     else
-      sudo pacman -Syyu --noconfirm
+      sudo pacman -Syu --noconfirm
     fi
 
     # Install packages
@@ -153,11 +158,13 @@ install_packages() {
         fi
     else
         if sudo pacman -S --noconfirm "${packages_pacman[@]}"; then
-            echo "Package installation complete."
+            echo "Pacman package installation complete."
                 if [ "$AUR_HELPER" == "paru" ]; then
                     paru -S --noconfirm "${packages_AUR[@]}"
+                    echo "AUR package installation is complete."
                 elif [ "$AUR_HELPER" == "yay" ]; then
                     yay -S --noconfirm "${packages_AUR[@]}"
+                    echo "AUR package installation is complete."
                 fi
         else
             echo "Package installation failed. Please check the error messages above."
@@ -222,21 +229,15 @@ echo "[+] All downloads are completed."
 #    sudo chmod +x "$USER_HOME/Desktop/ghidraRun.desktop"
 #    echo "[+] Shortcut created on Desktop"
 #fi
-if [ "$PACKAGE_MANAGER" == "apt" ]; then
     sudo snap install ghidra
-else
-    sudo pacman -S --noconfirm ghidra
-fi
 
 # Pwn Tools
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
     python3 -m pip install pwntools
 else
-    if [ "$AUR_HELPER" == "paru" ]; then
-        paru -S --noconfirm python-pwntools-git
-    elif [ "$AUR_HELPER" == "yay" ]; then
-        yay -S --noconfirm python-pwntools-git
-    fi
+# Pacman handles all python packages. Since pwntools isnt available in the arch repos install using a venv
+    pacman -S --noconfirm python-pipx
+    pipx install pwntools
 fi
 
 # Docker stuff
@@ -258,13 +259,6 @@ if ! command -v docker &> /dev/null; then
       sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     else
       sudo pacman -S --noconfirm docker docker-compose ca-certificates curl docker-buildx containerd
-
-      if [ "$AUR_HELPER" == "paru" ]; then
-          paru -S --noconfirm lazydocker
-      elif [ "$AUR_HELPER" == "yay" ]; then
-          yay -S --noconfirm lazydocker
-      fi
-
       sudo systemctl enable --now docker.service
     fi
 else
@@ -272,44 +266,16 @@ else
 fi
 
 # Vscode stuff
-if [ "$PACKAGE_MANAGER" == "apt" ]; then
-    sudo snap install code --classic
-else
-    sudo pacman -S --noconfirm code
-fi
+sudo snap install code --classic
 
 #fuff
-if [ "$PACKAGE_MANAGER" == "apt" ]; then
-    sudo snap install ffuf
-else
-    if [ "$AUR_HELPER" == "paru" ]; then
-        paru -S --noconfirm ffuf
-    elif [ "$AUR_HELPER" == "yay" ]; then
-        yay -S --noconfirm ffuf
-    fi
-fi
+sudo snap install ffuf
 
 # Autopsy stuff
-if [ "$PACKAGE_MANAGER" == "apt" ]; then
-    sudo snap install autopsy
-else
-    if [ "$AUR_HELPER" == "paru" ]; then
-        paru -S --noconfirm autopsy
-    elif [ "$AUR_HELPER" == "yay" ]; then
-        yay -S --noconfirm autopsy
-    fi
-fi
+sudo snap install autopsy
 
 # CyberChef
-if [ "$PACKAGE_MANAGER" == "apt" ]; then
-    sudo snap install cyberchef
-else
-    if [ "$AUR_HELPER" == "paru" ]; then
-        paru -S --noconfirm cyberchef-electron
-    elif [ "$AUR_HELPER" == "yay" ]; then
-        yay -S --noconfirm cyberchef-electron
-    fi
-fi
+sudo snap install cyberchef
 
 # Gef install
 if [ "$PACKAGE_MANAGER" == "apt" ]; then
